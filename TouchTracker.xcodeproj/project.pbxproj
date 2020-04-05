@@ -137,7 +137,6 @@
 			isa = PBXGroup;
 			children = (
 				7ACED1A2243A948F008047A2 /* Main.storyboard */,
-				7ACED1D1243A9835008047A2 /* DrawView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -153,6 +152,7 @@
 		7ACED1CE243A95B3008047A2 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				7ACED1D1243A9835008047A2 /* DrawView.swift */,
 				7ACED1D3243A99ED008047A2 /* ViewController.swift */,
 			);
 			path = Controller;
