@@ -11,7 +11,14 @@ class DrawView: UIView{
     var currentLines = [NSValue:Line]()
     var finishedLines = [Line]()
     
-    var selectedLineIndex: Int?
+    var selectedLineIndex: Int? {
+        didSet{
+            if selectedLineIndex == nil {
+                let menu = UIMenuController.shared
+                menu.setMenuVisible(false, animated: true)
+            }
+        }
+    }
     
     @IBInspectable var finishedLineColor: UIColor = UIColor.black{
         didSet{
@@ -164,10 +171,16 @@ class DrawView: UIView{
             // Has to make sure that the double tap fails before declaring it as a single tap.
         addGestureRecognizer(tapRecognizer)
     }
+    
+  
 }
 
 // MARK: - UIGestreRecognizerDelegate
 extension DrawView: UIGestureRecognizerDelegate{
+    
+    override var canBecomeFirstResponder: Bool {
+          return true
+      }
     
     @objc func doubleTap(_ gestureRecognizer: UIGestureRecognizer){
         print("Recognized a double tap")
@@ -184,6 +197,30 @@ extension DrawView: UIGestureRecognizerDelegate{
         let point = gestureRecognizer.location(in: self)
         selectedLineIndex = indexOfLine(at: point)
         
+        let menu = UIMenuController.shared
+        
+        if selectedLineIndex != nil{
+            becomeFirstResponder()
+            
+            let deleteItem = UIMenuItem(title: "Delete", action: #selector(DrawView.deleteLine(_:)))
+            menu.menuItems = [deleteItem]
+            
+            let targetRect = CGRect(x: point.x, y:point.y, width: 2, height: 2)
+            menu.setTargetRect(targetRect, in:self)
+            menu.setMenuVisible(true, animated: true)
+        } else{
+            menu.setMenuVisible(false, animated: true)
+        }
+        
         setNeedsDisplay()
+    }
+    
+    @objc func deleteLine(_ sender: UIMenuController){
+        if let index = selectedLineIndex{
+            finishedLines.remove(at: index)
+            selectedLineIndex = nil
+            
+            setNeedsDisplay()
+        }
     }
 }
